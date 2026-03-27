@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ကျွဲဂိမ်းစလော့ - Loading...</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Noto+Sans+Myanmar:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { 
+            font-family: 'Noto Sans Myanmar', 'Montserrat', sans-serif; 
+            background-color: #020617; /* Background အမဲရောင် */
+            color: #f8fafc;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        /* Logo Pulse Effect */
+        .logo-pulse {
+            animation: pulse 2.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(37, 99, 235, 0)); }
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 20px rgba(37, 99, 235, 0.4)); }
+            100% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(37, 99, 235, 0)); }
+        }
+
+        /* Loading Bar Style */
+        .progress-container {
+            width: 100%;
+            max-width: 280px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 2rem;
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #2563eb 0%, #60a5fa 100%);
+            box-shadow: 0 0 15px rgba(37, 99, 235, 0.5);
+            transition: width 0.1s linear;
+        }
+
+        /* Text Reveal Animation */
+        .fade-up {
+            animation: fadeUp 1s ease-out forwards;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="flex flex-col items-center w-full px-10">
+        
+        <div class="mb-10 fade-up">
+            <img src="https://repgyetdcodkynrbxocg.supabase.co/storage/v1/object/public/images/telegram-1774596292785-0a93d753.jpg" 
+                 alt="Kywe Game Logo" 
+                 class="w-36 h-36 md:w-44 md:h-44 object-contain rounded-full logo-pulse border-2 border-white/5">
+        </div>
+
+        <div class="text-center space-y-3 w-full flex flex-col items-center fade-up" style="animation-delay: 0.3s;">
+            <h1 class="text-xl font-bold tracking-widest text-white uppercase">ကျွဲဂိမ်းစလော့</h1>
+            <p id="status-text" class="text-[10px] text-slate-500 uppercase tracking-[0.3em] font-bold">Initializing System...</p>
+            
+            <div class="progress-container">
+                <div id="loading-bar-fill" class="progress-bar-fill"></div>
+            </div>
+            
+            <div id="loading-text" class="text-sm font-bold text-blue-400 mt-2">0%</div>
+        </div>
+
+        <p class="absolute bottom-10 text-[9px] text-slate-600 uppercase tracking-[0.5em] font-bold fade-up" style="animation-delay: 0.6s;">
+           Buffalo Gaming 
+        </p>
+    </div>
+
+    <script>
+        window.addEventListener('load', function() {
+            const loadingBar = document.getElementById('loading-bar-fill');
+            const loadingText = document.getElementById('loading-text');
+            const statusText = document.getElementById('status-text');
+            
+            let progress = 0;
+            const duration = 3500; // Loading ကြာချိန် (၃.၅ စက္ကန့်)
+            const intervalTime = 50; 
+            const increment = 100 / (duration / intervalTime);
+
+            const loadingInterval = setInterval(() => {
+                progress += increment;
+                
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(loadingInterval);
+                    loadingText.innerText = "100%";
+                    loadingBar.style.width = "100%";
+                    statusText.innerText = "Redirecting...";
+                    
+                    // Loading ပြည့်ပြီး ၀.၅ စက္ကန့်နေရင် Main.html ကို သွားမယ်
+                    setTimeout(() => {
+                        window.location.href = "main.html"; 
+                    }, 500);
+                } else {
+                    loadingBar.style.width = progress + "%";
+                    loadingText.innerText = Math.floor(progress) + "%";
+                    
+                    // စာသားလေးတွေ ပြောင်းပေးတာ (ပိုလန်းအောင်)
+                    if(progress > 30 && progress < 60) statusText.innerText = "Loading Assets...";
+                    if(progress > 60 && progress < 90) statusText.innerText = "Securing Connection...";
+                    if(progress > 90) statusText.innerText = "Finalizing...";
+                }
+            }, intervalTime);
+        });
+    </script>
+
+</body>
+</html>

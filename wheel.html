@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buffalo Wheel Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        body { 
+            font-family: 'Noto Sans Myanmar', sans-serif; 
+            background-color: #020617; 
+            color: #ffffff;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- Updated Header --- */
+        .header-bar {
+            position: sticky;
+            top: 0;
+            background: #0f172a;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            border-bottom: 2px solid #fbbf24;
+            z-index: 1000;
+            padding: 0 15px;
+        }
+
+        /* Marquee Box inside Header */
+        .marquee-box {
+            flex: 1;
+            overflow: hidden;
+            white-space: nowrap;
+            margin: 0 15px;
+        }
+
+        .scrolling-text {
+            display: inline-block;
+            animation: marquee-move 40s linear infinite;
+            color: #fbbf24; 
+            font-size: 13px;
+        }
+
+        @keyframes marquee-move {
+            0% { transform: translateX(0); } 
+            100% { transform: translateX(-100%); }
+        }
+
+        .noti-btn {
+            color: #fbbf24;
+            font-size: 20px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .noti-dot {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 8px;
+            height: 8px;
+            background: #ef4444;
+            border-radius: 50%;
+        }
+
+        /* --- Game Content Area --- */
+        .game-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            position: relative;
+        }
+
+        .wheel-box {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin-bottom: 20px;
+        }
+
+        .wheel-pointer {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            z-index: 20;
+            filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.6));
+        }
+
+        #wheel-wrapper {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid #0f172a;
+            box-shadow: 0 0 30px rgba(251, 191, 36, 0.2);
+            transition: transform 5s cubic-bezier(0.1, 0, 0.1, 1);
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .wheel-colors {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: conic-gradient(
+                #ef4444 0deg 72deg,    
+                #3b82f6 72deg 144deg,  
+                #eab308 144deg 216deg, 
+                #22c55e 216deg 288deg, 
+                #ec4899 288deg 360deg  
+            );
+            z-index: 1;
+        }
+
+        .wheel-center-buffalo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90px;
+            height: 90px;
+            background: #0f172a;
+            border: 4px solid #fbbf24;
+            border-radius: 50%;
+            z-index: 10;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.5);
+        }
+
+        .wheel-center-buffalo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* --- Betting Options --- */
+        .color-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .color-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            border: 3px solid transparent;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .color-btn.selected {
+            border-color: #ffffff;
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(255,255,255,0.4);
+        }
+
+        .spin-btn {
+            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+            color: #020617;
+            padding: 12px 60px;
+            border-radius: 50px;
+            font-size: 1.15rem;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(217, 119, 6, 0.3);
+        }
+
+        .spin-btn:disabled { opacity: 0.5; }
+
+        /* --- Footer (Fixed) --- */
+        .footer-fixed {
+            background: #334155;
+            padding: 15px 0;
+            text-align: center;
+            border-top: 2px solid #fbbf24;
+            flex-shrink: 0;
+            z-index: 100;
+        }
+
+        .footer-link {
+            color: #fbbf24;
+            font-size: 18px;
+            font-weight: 700;
+            text-decoration: none;
+            letter-spacing: 2px;
+            text-shadow: 0 0 8px rgba(251, 191, 36, 0.4);
+        }
+
+        #result-text {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-top: 15px;
+            height: 30px;
+            color: #fbbf24;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header-bar">
+        <a href="main.html" class="text-[#fbbf24] text-2xl no-underline">
+            <i class="fa-solid fa-chevron-left"></i>
+        </a>
+
+        <div class="marquee-box">
+            <span class="scrolling-text">
+                စလော့ဂိမ်းပေါင်းများစွာကို ယုံကြည်စွာကစားလိုပါက ဆက်သွယ်ရန် ကိုနှိပ်ပြီး အကောင့်ဖွင့်ပါ။ &nbsp;&nbsp;&nbsp;&nbsp; ★ &nbsp;&nbsp;&nbsp;&nbsp;
+            </span>
+        </div>
+
+        <div class="noti-btn">
+            <i class="fa-solid fa-bell"></i>
+            <span class="noti-dot"></span>
+        </div>
+    </header>
+
+    <main class="game-container">
+        <div class="wheel-box">
+            <svg class="wheel-pointer" viewBox="0 0 320 512" fill="#fbbf24">
+                <path d="M182.6 137.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-9.2 9.2-11.9 22.9-6.9 34.9s16.6 19.8 29.6 19.8H288c12.9 0 24.6-7.8 29.6-19.8s2.2-25.7-6.9-34.9l-128-128z"/>
+            </svg>
+            
+            <div id="wheel-wrapper">
+                <div class="wheel-colors"></div>
+                <div class="wheel-center-buffalo">
+                    <img src="https://repgyetdcodkynrbxocg.supabase.co/storage/v1/object/public/images/telegram-1774607631318-b780b537.png" alt="Buffalo Center">
+                </div>
+            </div>
+        </div>
+
+        <p class="text-gray-300 mb-2 text-xs">အရောင်တစ်ခုကို အရင်ရွေးပေးပါ</p>
+        
+        <div class="color-selector">
+            <button class="color-btn bg-red-500" onclick="selectColor('#ef4444', 0)"></button>
+            <button class="color-btn bg-blue-500" onclick="selectColor('#3b82f6', 1)"></button>
+            <button class="color-btn bg-yellow-500" onclick="selectColor('#eab308', 2)"></button>
+            <button class="color-btn bg-green-500" onclick="selectColor('#22c55e', 3)"></button>
+            <button class="color-btn bg-pink-500" onclick="selectColor('#ec4899', 4)"></button>
+        </div>
+
+        <button id="spinBtn" class="spin-btn" onclick="spinWheel()">SPIN</button>
+        <div id="result-text"></div>
+    </main>
+
+    <footer class="footer-fixed">
+        <a href="support.html" class="footer-link">ဆက်သွယ်ရန်</a>
+    </footer>
+
+    <script>
+        let selectedIndex = -1;
+        let isSpinning = false;
+        let currentRotation = 0;
+
+        function selectColor(color, index) {
+            if (isSpinning) return;
+            selectedIndex = index;
+            document.querySelectorAll('.color-btn').forEach((btn, i) => {
+                btn.classList.toggle('selected', i === index);
+            });
+            document.getElementById('result-text').innerText = "";
+        }
+
+        function spinWheel() {
+            if (isSpinning) return;
+            if (selectedIndex === -1) {
+                alert("အရောင်အရင်ရွေးပေးပါဦး ဘရားသား!");
+                return;
+            }
+
+            isSpinning = true;
+            const btn = document.getElementById('spinBtn');
+            const wheelWrapper = document.getElementById('wheel-wrapper');
+            const resultDisplay = document.getElementById('result-text');
+            
+            btn.disabled = true;
+            resultDisplay.innerText = "ကံစမ်းနေသည်...";
+
+            const extraDegrees = Math.floor(Math.random() * 360);
+            const totalRotation = currentRotation + (360 * 5) + extraDegrees;
+            currentRotation = totalRotation;
+            
+            wheelWrapper.style.transform = `rotate(${totalRotation}deg) `;
+
+            setTimeout(() => {
+                isSpinning = false;
+                btn.disabled = false;
+                
+                const normalizedAngle = (360 - (totalRotation % 360)) % 360;
+                const winIndex = Math.floor(normalizedAngle / 72);
+
+                if (winIndex === selectedIndex) {
+                    resultDisplay.innerText = "ဂုဏ်ယူပါတယ်! သင်နိုင်ပါပြီ။ 🎉";
+                    resultDisplay.style.color = "#22c55e";
+                } else {
+                    resultDisplay.innerText = "နောက်တစ်ခါ ထပ်ကြိုးစားကြည့်ပါ။";
+                    resultDisplay.style.color = "#ef4444";
+                }
+            }, 5000); 
+        }
+    </script>
+</body>
+</html>

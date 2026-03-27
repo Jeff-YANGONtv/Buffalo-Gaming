@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buffalo Legend - Support</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root { --gold: #ffd700; --dark: #020617; }
+        body { margin: 0; background: var(--dark); font-family: 'Segoe UI', sans-serif; color: white; overflow-x: hidden; }
+
+        /* Header Style */
+        .sticky-header {
+            position: fixed; top: 0; width: 100%; background: #0f172a;
+            height: 60px; display: flex; align-items: center; 
+            border-bottom: 2px solid #fbbf24; z-index: 1100;
+            padding: 0 15px;
+        }
+
+        /* Menu Bar နေရာမှာ အစားထိုးမည့် Back Button */
+        .back-icon { 
+            font-size: 22px; 
+            color: #fbbf24; 
+            padding: 0 10px; 
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .marquee-container { flex: 1; overflow: hidden; margin-left: 10px; }
+        .marquee-text {
+            white-space: nowrap; color: #fbbf24; font-size: 13px;
+            display: inline-block; padding-left: 100%;
+            animation: scroll-slow 25s linear infinite;
+        }
+        @keyframes scroll-slow { 0% { transform: translateX(0); } 100% { transform: translateX(-150%); } }
+
+        /* Support Content */
+        .support-container { padding: 100px 20px 40px; display: flex; flex-direction: column; align-items: center; min-height: 85vh; }
+        .support-card {
+            background: #0f172a; border-radius: 25px; padding: 40px 20px;
+            width: 100%; max-width: 360px; text-align: center;
+            border: 1px solid rgba(251, 191, 36, 0.2); box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+        }
+        .support-icon-top { font-size: 60px; color: #fbbf24; margin-bottom: 20px; }
+        .support-card h2 { color: #fbbf24; margin: 10px 0; font-size: 24px; font-weight: bold; }
+        .support-card p { color: #94a3b8; font-size: 14px; line-height: 1.6; margin-bottom: 30px; }
+
+        /* Buttons */
+        .contact-btn {
+            display: flex; align-items: center; justify-content: center;
+            gap: 12px; width: 100%; padding: 16px 0; border-radius: 15px;
+            text-decoration: none; font-weight: bold; font-size: 16px;
+            margin-bottom: 15px; color: #fff; transition: 0.3s;
+        }
+        .viber-btn { background: #7360f2; box-shadow: 0 4px 15px rgba(115, 96, 242, 0.3); }
+        .tele-btn { background: #24A1DE; box-shadow: 0 4px 15px rgba(36, 161, 222, 0.3); }
+        
+        .contact-btn:active { transform: scale(0.96); }
+
+        /* Footer Fixed အောက်ခြေမှာ ကပ်ထားရန် */
+        .footer-fixed {
+            background: #334155;
+            padding: 18px 0;
+            text-align: center;
+            border-top: 2px solid #fbbf24;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .footer-link { color: #fbbf24; text-decoration: none; font-size: 18px; font-weight: 700; letter-spacing: 2px; }
+    </style>
+</head>
+<body>
+
+    <div class="sticky-header">
+        <a href="main.html" class="back-icon">
+            <i class="fa-solid fa-chevron-left"></i>
+        </a>
+        
+        <div class="marquee-container">
+            <div class="marquee-text">
+                ကျွဲဂိမ်းချစ်သူများအတွက် - ၂၄နာရီ ပိတ်ရက်မရှိ ဝန်ဆောင်မှုပေးလျက်ရှိပါသည်။ စိတ်ချယုံကြည်စွာ ဆက်သွယ်နိုင်ပါသည်။ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </div>
+        </div>
+    </div>
+
+    <div class="support-container">
+        <div class="support-card">
+            <div class="support-icon-top"><i class="fa-solid fa-headset"></i></div>
+            <h2>Get In Touch</h2>
+            <p>၂၄နာရီမပျက် ပိတ်ရက်မရှိ ဝန်ဆောင်မှုပေးလျက်ရှိပြီး လူကြီးမင်းတို့အနေဖြင့် စိတ်ချယုံကြည်စွာ ဆက်သွယ်နိုင်ပါသည်။</p>
+
+            <a href="viber://chat?number=ညီလေးဖုန်းနံပါတ်" id="viber-link" class="contact-btn viber-btn">
+                <i class="fa-brands fa-viber"></i> Viber Support
+            </a>
+
+            <a href="https://t.me/ညီလေးID" id="tele-link" class="contact-btn tele-btn">
+                <i class="fa-brands fa-telegram"></i> Telegram Support
+            </a>
+        </div>
+    </div>
+
+    <footer class="footer-fixed">
+        <a href="support.html" class="footer-link">ဆက်သွယ်ရန်</a>
+    </footer>
+
+    <script>
+        // SheetDB သုံးရင် အောက်က YOUR_ID နေရာမှာ ညီလေး ID ထည့်ပါ
+        async function fetchLinks() {
+            try {
+                const response = await fetch('https://sheetdb.io/api/v1/YOUR_ID');
+                const data = await response.json();
+                if (data && data.length > 0) {
+                    if(data[0].viber) document.getElementById('viber-link').href = "viber://chat?number=" + data[0].viber;
+                    if(data[0].telegram) document.getElementById('tele-link').href = data[0].telegram;
+                }
+            } catch (e) { console.log("Link Update Error"); }
+        }
+        window.onload = fetchLinks;
+    </script>
+</body>
+</html>
